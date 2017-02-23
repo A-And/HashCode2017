@@ -4,10 +4,12 @@ class Video(object):
         self.size = size
 
 class Endpoint(object):
-    videos = []
-    videoRequests = []
+    videos = {}
+    videoRequests = {}
     latencyToDataServer = 0
-    latencyToCacheServer = 0
+    latencyToCacheServers = {}
+
+
     def __init__(self, videos, latencyToCacheServer, latencyToDataServer):
         self.videos = videos
         self.latencyToCacheServer = latencyToCacheServer    
@@ -15,14 +17,27 @@ class Endpoint(object):
 
     def setVideoRequests(self,video, numRequests):
         self.videoRequests[video] = numRequests
+
+
 class CacheServer:
-    endpoints = []
+    endpoints = {}
     capacity = 0
-    videos = []
+    videos = {}
     def __init__(self, endpoints, capacity):
         self.endpoints = endpoints
         self.capacity = capacity
     
-    def addVideo(self, video):
-        self.videos.append(video)
+    def addVideo(self, key,video):
+        self.videos.update({key,video})
         self.capacity -= video.size
+
+    def add_endpoint(self, name, endpoint):
+        self.endpoints.update({name: endpoint})
+
+    def get_capacity(self):
+        current_capacity = 0
+        for i in self.videos:
+            current_capacity += i.size
+        return self.capacity - current_capacity
+
+
