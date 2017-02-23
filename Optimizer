@@ -1,14 +1,26 @@
+from Knapsack import *
+from Objects import *
+
 class Optimizer:
     
     def main(self):
-        print('')
+        cache_servers = []
+        endpoints = []
+        videos = []
 
-    def make_comparator(self, less_than):
+        cache_servers = sorted(cache_servers, cmp=compare)
+        
+        for i in range(cache_servers.len()):
+            current_s = cache_servers[i]
+
+            knapsack = Knapsack()
+            picked_videos = knapsack.knapsack01_dp(current_s.videos.items(), current_s.capacity) 
+            for i in range(current_s.videos):
+                for video in picked_videos:
+                    del current_s.videos[video.index]      
+            cache_servers = sorted(cache_servers, cmp=compare)
+            
         def compare(x, y):
-            if less_than(x, y):
-                return -1
-            elif less_than(y, x):
-                return 1
-            else:
-                return 0
+            return x.get_score() < y.get_score()
+
         return  compare

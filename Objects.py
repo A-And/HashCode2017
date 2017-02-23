@@ -46,12 +46,23 @@ class CacheServer:
         for i in self.videos:
             current_capacity += i.size
         return self.capacity - current_capacity
+
     def get_score(self):
-        running_latency = 0
+        running_cache_latency = 0
+        running_ds_latency = 0
         video_scores = {}
-        for key,value in endpoints.items():
-            runningLatency += value.latencyToCacheServers(self)
 
+        for key,value in self.endpoints.items():
+            running_cache_latency += value.latencyToCacheServers(self.index)      
+            running_ds_latency += value.latencyToDataServer()      
+            for index, videoVal in value.videoRequests:
+                video_scores[index] += videoVal
 
-    def calculate_avg_latenc        
+        running_cache_latency /= self.endpoints.len()
+        running_ds_latency /= self.endpoints.len()
+        running_score = 0
+        
+        for value in video_scores.keys():
+            running_score += running_ds_latency*value - running_cache_latency * value  
 
+        return running_score
